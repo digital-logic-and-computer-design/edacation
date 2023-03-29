@@ -7,6 +7,7 @@ import {hideBin} from 'yargs/helpers';
 
 import {exists} from '../util';
 import {Project, VENDORS} from '../project';
+import {executeTool} from '../tool';
 
 console.log('EDAcation CLI');
 console.log();
@@ -117,4 +118,5 @@ console.log(`Device:  ${VENDORS[target.vendor].families[target.family].devices[t
 console.log(`Package: ${VENDORS[target.vendor].packages[target.package]}`);
 console.log();
 
-console.log('TODO: ', command);
+// TODO: arguments/input
+executeTool(command as 'yosys' | 'nextpnr', []);
