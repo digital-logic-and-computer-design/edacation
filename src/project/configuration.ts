@@ -5,6 +5,7 @@ import type {ArrayElement} from '../util';
 export const DEFAULT_CONFIGURATION: ProjectConfiguration = {
     targets: [
         {
+            id: 'default',
             name: 'ECP5 - LFE5U-12 - caBGA381',
 
             vendor: 'lattice',
@@ -52,6 +53,7 @@ const schemaCombinedNextpnr = schemaWorker.merge(schemaNextpnr);
 const schemaCombinedNextpnrTarget = schemaWorkerTarget.merge(schemaNextpnrTarget);
 
 const schemaTarget = z.object({
+    id: z.string(),
     name: z.string(),
 
     vendor: z.string(),
