@@ -1,12 +1,12 @@
 import path from 'path';
-import {readFile} from 'fs/promises';
+import {readFile, writeFile} from 'fs/promises';
 
 import {Argv} from 'yargs';
 import yargs from 'yargs/yargs';
 import {hideBin} from 'yargs/helpers';
 
 import {exists} from '../util';
-import {Project} from '../project';
+import {Project, VENDORS} from '../project';
 
 console.log('EDAcation CLI');
 console.log();
@@ -26,6 +26,17 @@ const buildCommandArgs = (yargs: Argv) => {
 // Parse arguments
 const argv = await yargs(hideBin(process.argv))
     .scriptName('edacation')
+    .command('init <project>', 'Initialize EDA project', (yargs) => {
+        return yargs
+            .positional('project', {
+                type: 'string',
+                description: 'EDA project file (e.g. "full-adder.edaproject")'
+            })
+            .option('name', {
+                type: 'string',
+                description: 'Name of the project (e.g. "Full Adder")'
+            });
+    })
     .command('yosys <project> <target>', 'Synthesize with Yosys', buildCommandArgs)
     .command('nextpnr <project> <target>', 'Place and route with nextpnr', buildCommandArgs)
     .demandCommand()
@@ -34,10 +45,37 @@ const argv = await yargs(hideBin(process.argv))
     .help()
     .parse();
 
+const command = argv._[0];
+
 // Validate project
 const cwdPath = path.resolve(process.cwd());
-const projectFile = argv.project as string;
+let projectFile = argv.project as string;
 let projectPath = path.join(cwdPath, projectFile);
+
+if (command === 'init') {
+    if (!projectPath.endsWith('.edaproject')) {
+        projectFile = `${projectFile}.edaproject`;
+        projectPath = `${projectPath}.edaproject`;
+    }
+
+    if (await exists(projectPath)) {
+        console.error(`Project "${projectFile}" already exists in "${cwdPath}".`);
+        process.exit(1);
+    }
+
+    let name = argv.name as string;
+    if (!name) {
+        name = path.basename(projectPath);
+        name = name.substring(0, name.length - '.edaproject'.length);
+    }
+
+    const project = new Project(name);
+    await writeFile(projectPath, await Project.store(project));
+
+    console.log(`Created project "${name}" in "${projectPath}".`);
+
+    process.exit(0);
+}
 
 if (!(await exists(projectPath))) {
     if (projectPath.endsWith('.edaproject')) {
@@ -53,7 +91,6 @@ if (!(await exists(projectPath))) {
     }
 }
 
-const tool = argv._[0];
 const targetId = argv.target as string;
 
 // Load project
@@ -72,5 +109,12 @@ if (!target) {
 }
 
 console.log(`Loaded target "${target.name}".`);
+console.log();
 
-console.log('TODO: ', tool);
+console.log(`Vendor:  ${VENDORS[target.vendor].name}`);
+console.log(`Family:  ${VENDORS[target.vendor].families[target.family].name}`);
+console.log(`Device:  ${VENDORS[target.vendor].families[target.family].devices[target.device].name}`);
+console.log(`Package: ${VENDORS[target.vendor].packages[target.package]}`);
+console.log();
+
+console.log('TODO: ', command);
