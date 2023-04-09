@@ -22,3 +22,4 @@ export const decodeJSON = (input: NodeJS.ArrayBufferView | ArrayBuffer) => JSON.
 
 export const FILE_EXTENSIONS_VERILOG = ['v', 'vh', 'sv', 'svh'];
 export const FILE_EXTENSIONS_VHDL = ['vhd'];
+export const FILE_EXTENSIONS_HDL = [...FILE_EXTENSIONS_VERILOG, ...FILE_EXTENSIONS_VHDL];

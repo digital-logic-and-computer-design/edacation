@@ -24,7 +24,7 @@ export class Project {
         if (config.success) {
             this.configuration = config.data;
         } else {
-            this.configuration = DEFAULT_CONFIGURATION;
+            throw new Error(`Failed to parse project configuration: ${config.error}`);
         }
     }
 

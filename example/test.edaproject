@@ -1,6 +1,8 @@
 {
     "name": "Test project",
-    "inputFiles": [],
+    "inputFiles": [
+        "./test.v"
+    ],
     "outputFiles": [],
     "configuration": {
         "targets": [

@@ -6,7 +6,7 @@ import yargs from 'yargs/yargs';
 import {hideBin} from 'yargs/helpers';
 
 import {exists} from '../util';
-import {Project, VENDORS} from '../project';
+import {Project, VENDORS, generateNextpnrWorker, generateYosysWorker} from '../project';
 import {executeTool} from '../tool';
 
 console.log('EDAcation CLI');
@@ -118,5 +118,26 @@ console.log(`Device:  ${VENDORS[target.vendor].families[target.family].devices[t
 console.log(`Package: ${VENDORS[target.vendor].packages[target.package]}`);
 console.log();
 
-// TODO: arguments/input
-executeTool(command as 'yosys' | 'nextpnr', []);
+const cwd = path.dirname(projectPath);
+
+if (command === 'yosys') {
+    const workerOptions = generateYosysWorker(project, target.id);
+
+    console.log(workerOptions);
+
+    const designFilePath = path.join(cwd, 'design.ys');
+    await writeFile(designFilePath, workerOptions.commands.concat(['']).join('\n'), {encoding: 'utf-8'});
+    executeTool(workerOptions.tool, ['design.ys'], cwd);
+
+    // TODO: wait for tool
+    // await unlink(designFilePath);
+} else if (command === 'nextpnr') {
+    const workerOptions = generateNextpnrWorker(project, target.id);
+
+    console.log(workerOptions);
+
+    executeTool(workerOptions.tool, workerOptions.arguments, cwd);
+} else {
+    console.error(`Unknown command "${command}".`);
+    process.exit(1);
+}
