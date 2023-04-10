@@ -2,6 +2,13 @@ import {decodeJSON, encodeJSON} from '../util.js';
 
 import {DEFAULT_CONFIGURATION, ProjectConfiguration, schemaProjectConfiguration} from './configuration.js';
 
+export interface ProjectState {
+    name: string;
+    inputFiles: string[];
+    outputFiles: string[];
+    configuration: ProjectConfiguration;
+}
+
 export class Project {
 
     private name: string;
@@ -103,7 +110,7 @@ export class Project {
         await Project.store(this);
     }
 
-    static serialize(project: Project): any {
+    static serialize(project: Project): ProjectState {
         return {
             name: project.name,
             inputFiles: project.inputFiles,
@@ -112,7 +119,7 @@ export class Project {
         };
     }
 
-    static deserialize(data: any): Project {
+    static deserialize(data: ProjectState): Project {
         const name: string = data.name;
         const inputFiles: string[] = data.inputFiles ?? [];
         const outputFiles: string[] = data.outputFiles ?? [];
