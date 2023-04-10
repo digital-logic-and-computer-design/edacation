@@ -57,14 +57,10 @@ export class Project {
         this.inputFiles.sort((a, b) => {
             return a < b ? -1 : 1;
         });
-
-        await this.save();
     }
 
     async removeInputFiles(filePaths: string[]) {
         this.inputFiles = this.inputFiles.filter((file) => !filePaths.includes(file));
-
-        await this.save();
     }
 
     getOutputFiles() {
@@ -85,14 +81,10 @@ export class Project {
         this.outputFiles.sort((a, b) => {
             return a < b ? -1 : 1;
         });
-
-        await this.save();
     }
 
     async removeOutputFiles(filePaths: string[]) {
         this.outputFiles = this.outputFiles.filter((file) => !filePaths.includes(file));
-
-        await this.save();
     }
 
     getConfiguration() {
@@ -104,10 +96,6 @@ export class Project {
             ...this.configuration,
             ...configuration
         };
-    }
-
-    private async save() {
-        await Project.store(this);
     }
 
     static serialize(project: Project): ProjectState {
