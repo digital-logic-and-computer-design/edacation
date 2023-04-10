@@ -80,7 +80,7 @@ if (command === 'init') {
     }
 
     const project = new Project(name);
-    await writeFile(projectPath, await Project.store(project));
+    await writeFile(projectPath, await Project.storeToData(project));
 
     console.log(`Created project "${name}" in "${projectPath}".`);
 
@@ -107,7 +107,7 @@ const shouldExecute = argv.execute as boolean;
 const targetId = argv.target as string;
 
 // Load project
-const project = await Project.load(await readFile(projectPath));
+const project = await Project.loadFromData(await readFile(projectPath));
 const configuration = project.getConfiguration();
 
 console.log(`Loaded project "${project.getName()}".`);

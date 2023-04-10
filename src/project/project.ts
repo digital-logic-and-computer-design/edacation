@@ -20,8 +20,7 @@ export class Project {
         name: string,
         inputFiles: string[] = [],
         outputFiles: string[] = [],
-        configuration: ProjectConfiguration = DEFAULT_CONFIGURATION,
-        ..._additionalData: unknown[]
+        configuration: ProjectConfiguration = DEFAULT_CONFIGURATION
     ) {
 
         this.name = name;
@@ -108,22 +107,22 @@ export class Project {
         };
     }
 
-    static deserialize(data: ProjectState, ...additionalData: unknown[]): Project {
+    static deserialize(data: ProjectState): Project {
         const name: string = data.name;
         const inputFiles: string[] = data.inputFiles ?? [];
         const outputFiles: string[] = data.outputFiles ?? [];
         const configuration: ProjectConfiguration = data.configuration ?? {};
 
-        return new Project(name, inputFiles, outputFiles, configuration, ...additionalData);
+        return new Project(name, inputFiles, outputFiles, configuration);
     }
 
-    static async load(rawData: Uint8Array): Promise<Project> {
+    static async loadFromData(rawData: Uint8Array): Promise<Project> {
         const data = decodeJSON(rawData);
         const project = Project.deserialize(data);
         return project;
     }
 
-    static async store(project: Project): Promise<Uint8Array> {
+    static async storeToData(project: Project): Promise<Uint8Array> {
         const data = Project.serialize(project);
         return encodeJSON(data, true);
     }
