@@ -7,9 +7,9 @@ import {Argv} from 'yargs';
 import yargs from 'yargs/yargs';
 import {hideBin} from 'yargs/helpers';
 
-import {exists} from '../util';
-import {Project, VENDORS, generateNextpnrWorker, generateYosysWorker} from '../project';
-import {executeTool} from '../tool';
+import {exists} from '../util.js';
+import {Project, VENDORS, generateNextpnrWorker, generateYosysWorker} from '../project/index.js';
+import {executeTool} from '../tool.js';
 
 console.log('EDAcation CLI');
 console.log();

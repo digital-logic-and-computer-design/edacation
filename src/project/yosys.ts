@@ -1,11 +1,11 @@
 import path from 'path';
 
-import {FILE_EXTENSIONS_VERILOG, FILE_EXTENSIONS_HDL} from '../util';
+import {FILE_EXTENSIONS_VERILOG, FILE_EXTENSIONS_HDL} from '../util.js';
 
-import {VENDORS, Vendor} from './devices';
-import {getCombined, getOptions, getTarget, getTargetFile} from './target';
-import {Project} from './project';
-import {YosysOptions} from './configuration';
+import {VENDORS, Vendor} from './devices.js';
+import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
+import {Project} from './project.js';
+import {YosysOptions} from './configuration.js';
 
 const DEFAULT_OPTIONS: YosysOptions = {
     optimize: true
@@ -58,7 +58,7 @@ export const generateYosysWorker = (project: Project, targetId: string) => {
 export const generateYosysRTLCommands = (inputFiles: string[]): string[] => {
     const verilogFiles = inputFiles.filter((file) => FILE_EXTENSIONS_VERILOG.includes(path.extname(file).substring(1)));
 
-    // Yosys commands taken from yosys2digitaljs (https://github.com/tilk/yosys2digitaljs/blob/1b4afeae61/src/index.ts#L1225)
+    // Yosys commands taken from yosys2digitaljs (https://github.com/tilk/yosys2digitaljs/blob/1b4afeae61/src/index.js#L1225)
 
     return [
         ...verilogFiles.map((file) => `read_verilog ${file}`),

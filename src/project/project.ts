@@ -1,6 +1,6 @@
-import {decodeJSON, encodeJSON} from '../util';
+import {decodeJSON, encodeJSON} from '../util.js';
 
-import {DEFAULT_CONFIGURATION, ProjectConfiguration, schemaProjectConfiguration} from './configuration';
+import {DEFAULT_CONFIGURATION, ProjectConfiguration, schemaProjectConfiguration} from './configuration.js';
 
 export class Project {
 

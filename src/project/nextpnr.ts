@@ -1,7 +1,7 @@
-import {NextpnrOptions} from './configuration';
-import {VENDORS, Vendor} from './devices';
-import {Project} from './project';
-import {getCombined, getOptions, getTarget, getTargetFile} from './target';
+import {NextpnrOptions} from './configuration.js';
+import {VENDORS, Vendor} from './devices.js';
+import {Project} from './project.js';
+import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
 
 const DEFAULT_OPTIONS: NextpnrOptions = {
     placedSvg: true,

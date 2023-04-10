@@ -1,6 +1,6 @@
 import {z} from 'zod';
 
-import type {ArrayElement} from '../util';
+import type {ArrayElement} from '../util.js';
 
 export const DEFAULT_CONFIGURATION: ProjectConfiguration = {
     targets: [

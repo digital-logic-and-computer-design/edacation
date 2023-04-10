@@ -1,6 +1,6 @@
 import path from 'path';
 
-import {NextpnrOptions, ProjectConfiguration, TargetConfiguration, TargetDefaultsConfiguration, WorkerId, YosysOptions} from './configuration';
+import {NextpnrOptions, ProjectConfiguration, TargetConfiguration, TargetDefaultsConfiguration, WorkerId, YosysOptions} from './configuration.js';
 
 export const getTargetDefaults = (configuration: ProjectConfiguration): TargetDefaultsConfiguration => {
     return configuration.defaults ?? {};
