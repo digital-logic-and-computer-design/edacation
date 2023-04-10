@@ -3,13 +3,20 @@ import {VENDORS, Vendor} from './devices.js';
 import {Project} from './project.js';
 import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
 
+export interface NextpnrWorkerOptions {
+    inputFiles: string[];
+    outputFiles: string[];
+    tool: string;
+    arguments: string[];
+}
+
 const DEFAULT_OPTIONS: NextpnrOptions = {
     placedSvg: true,
     routedSvg: true,
     routedJson: true
 };
 
-export const generateNextpnrWorkerOptions = (configuration: ProjectConfiguration, targetId: string) => {
+export const generateNextpnrWorkerOptions = (configuration: ProjectConfiguration, targetId: string): NextpnrWorkerOptions => {
     const target = getTarget(configuration, targetId);
     const options = getOptions(configuration, targetId, 'nextpnr', DEFAULT_OPTIONS);
 
@@ -92,7 +99,7 @@ export const generateNextpnrWorkerOptions = (configuration: ProjectConfiguration
     };
 };
 
-export const getNextpnrWorkerOptions = (project: Project, targetId: string) => {
+export const getNextpnrWorkerOptions = (project: Project, targetId: string): NextpnrWorkerOptions => {
     const generated = generateNextpnrWorkerOptions(project.getConfiguration(), targetId);
 
     const inputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'inputFiles', generated.inputFiles);

@@ -7,11 +7,18 @@ import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
 import {Project} from './project.js';
 import {ProjectConfiguration, YosysOptions} from './configuration.js';
 
+export interface YosysWorkerOptions {
+    inputFiles: string[];
+    outputFiles: string[];
+    tool: string;
+    commands: string[];
+}
+
 const DEFAULT_OPTIONS: YosysOptions = {
     optimize: true
 };
 
-export const generateYosysWorkerOptions = (configuration: ProjectConfiguration, projectInputFiles: string[], targetId: string) => {
+export const generateYosysWorkerOptions = (configuration: ProjectConfiguration, projectInputFiles: string[], targetId: string): YosysWorkerOptions => {
     const target = getTarget(configuration, targetId);
     const options = getOptions(configuration, targetId, 'yosys', DEFAULT_OPTIONS);
 
@@ -48,7 +55,7 @@ export const generateYosysWorkerOptions = (configuration: ProjectConfiguration, 
     };
 };
 
-export const getYosysWorkerOptions = (project: Project, targetId: string) => {
+export const getYosysWorkerOptions = (project: Project, targetId: string): YosysWorkerOptions => {
     const generated = generateYosysWorkerOptions(project.getConfiguration(), project.getInputFiles(), targetId);
 
     const inputFiles = getCombined(project.getConfiguration(), targetId, 'yosys', 'inputFiles', generated.inputFiles);

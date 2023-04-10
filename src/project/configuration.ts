@@ -105,3 +105,8 @@ export type YosysTargetConfiguration = z.infer<typeof schemaYosysTarget>;
 export type NextpnrOptions = z.infer<typeof schemaNextpnrOptions>;
 export type NextpnrConfiguration = z.infer<typeof schemaNextpnr>;
 export type NextpnrTargetConfiguration = z.infer<typeof schemaNextpnrTarget>;
+
+export type TargetOptionTypes = {
+    yosys: YosysOptions;
+    nextpnr: NextpnrOptions;
+};

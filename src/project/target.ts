@@ -1,6 +1,6 @@
 import path from 'path';
 
-import {NextpnrOptions, ProjectConfiguration, TargetConfiguration, TargetDefaultsConfiguration, WorkerId, YosysOptions} from './configuration.js';
+import {ProjectConfiguration, TargetConfiguration, TargetDefaultsConfiguration, TargetOptionTypes, WorkerId} from './configuration.js';
 
 export const getTargetDefaults = (configuration: ProjectConfiguration): TargetDefaultsConfiguration => {
     return configuration.defaults ?? {};
@@ -16,17 +16,12 @@ export const getTarget = (configuration: ProjectConfiguration, targetId: string)
 
 export const getTargetFile = (target: TargetConfiguration, file: string) => path.join(target.directory ?? '.', file);
 
-type WorkerOptionTypes = {
-    yosys: YosysOptions;
-    nextpnr: NextpnrOptions;
-};
-
 export const getOptions = <W extends WorkerId>(
     configuration: ProjectConfiguration,
     targetId: string,
     workerId: W,
-    defaultValues: WorkerOptionTypes[W]
-): WorkerOptionTypes[W] => {
+    defaultValues: TargetOptionTypes[W]
+): TargetOptionTypes[W] => {
     const targetDefaults = getTargetDefaults(configuration)[workerId];
     const target = getTarget(configuration, targetId)[workerId];
 

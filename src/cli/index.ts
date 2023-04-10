@@ -146,7 +146,6 @@ if (command === 'yosys') {
     console.log([workerOptions.tool, ''].concat(workerOptions.commands).join('\n'));
     console.log();
 
-
     if (shouldExecute) {
         const designFilePath = path.join(cwd, 'design.ys');
         await writeFile(designFilePath, workerOptions.commands.concat(['']).join('\n'), {encoding: 'utf-8'});
