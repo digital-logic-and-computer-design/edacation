@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import path from 'path';
 import {readFile, writeFile, unlink, mkdir} from 'fs/promises';
 
