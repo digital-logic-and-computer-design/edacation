@@ -151,34 +151,33 @@ export const VENDORS = {
             vq100: '100-pin VQFP (14 x 14 mm)'
         },
         families: {
-            // TODO: the Nexus architecture probably needs full device names (https://github.com/YosysHQ/nextpnr/blob/master/docs/nexus.md)
-            'certus-nx': {
-                name: 'Certus-NX',
-                architecture: 'nexus',
-                url: 'https://www.latticesemi.com/Certus-NX',
-                devices: {
-                    // NOTE: LFD2NX-17 is also listed on the Lattice website, but nextpnr does not appear to support this device
-                    'lfd2nx-40': {
-                        name: 'LFD2NX-40',
-                        device: 'LFD2NX-40',
-                        // NOTE: csfBGA121 and caBGA196 are also listed on the Lattice website, but nextpnr does not appear to support it for this device
-                        packages: ['caBGA256']
-                    }
-                }
-            },
-            'certuspro-nx': {
-                name: 'CertusPro-NX',
-                architecture: 'nexus',
-                url: 'https://www.latticesemi.com/CertusPro-NX',
-                devices: {
-                    // NOTE: LFCPNX-50 is also listed on the Lattice website, but nextpnr does not appear to support this device
-                    'lfcpnx-100': {
-                        name: 'LFCPNX-100',
-                        device: 'LFCPNX-100',
-                        packages: ['ASG256', 'CBG256', 'BBG484', 'BFG484', 'LFG672']
-                    }
-                }
-            },
+            // 'certus-nx': {
+            //     name: 'Certus-NX',
+            //     architecture: 'nexus',
+            //     url: 'https://www.latticesemi.com/Certus-NX',
+            //     devices: {
+            //         // NOTE: LFD2NX-17 is also listed on the Lattice website, but nextpnr does not appear to support this device
+            //         'lfd2nx-40': {
+            //             name: 'LFD2NX-40',
+            //             device: 'LFD2NX-40',
+            //             // NOTE: csfBGA121 and caBGA196 are also listed on the Lattice website, but nextpnr does not appear to support it for this device
+            //             packages: ['caBGA256']
+            //         }
+            //     }
+            // },
+            // 'certuspro-nx': {
+            //     name: 'CertusPro-NX',
+            //     architecture: 'nexus',
+            //     url: 'https://www.latticesemi.com/CertusPro-NX',
+            //     devices: {
+            //         // NOTE: LFCPNX-50 is also listed on the Lattice website, but nextpnr does not appear to support this device
+            //         'lfcpnx-100': {
+            //             name: 'LFCPNX-100',
+            //             device: 'LFCPNX-100',
+            //             packages: ['ASG256', 'CBG256', 'BBG484', 'BFG484', 'LFG672']
+            //         }
+            //     }
+            // },
             'crosslink-nx': {
                 name: 'CrossLink-NX',
                 architecture: 'nexus',
@@ -187,15 +186,13 @@ export const VENDORS = {
                     'lifcl-17': {
                         name: 'LIFCL-17',
                         device: 'LIFCL-17',
-                        // NOTE: WLCSP72 is also listed on the Lattice website, but nextpnr does not appear to support it for this device
-                        packages: ['QFN72', 'csfBGA121', 'caBGA256']
+                        packages: ['WLCSP72', 'QFN72', 'csfBGA121', 'caBGA256']
                     },
                     // NOTE: LIFCL-33 is also listed on the Lattice website, but nextpnr does not appear to support this device
                     'lifcl-40': {
                         name: 'LIFCL-40',
                         device: 'LIFCL-40',
-                        // NOTE: csfBGA121 and caBGA256 are also listed on the Lattice website, but nextpnr does not appear to support it for this device
-                        packages: ['QFN72', 'csfBGA289', 'caBGA400']
+                        packages: ['QFN72', 'csfBGA121', 'caBGA256', 'csfBGA289', 'caBGA400']
                     }
                 }
             },

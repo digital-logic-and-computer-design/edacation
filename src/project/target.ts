@@ -1,4 +1,10 @@
-import {ProjectConfiguration, TargetConfiguration, ValueListConfiguration, ValueListConfigurationTarget, WorkerId} from './configuration';
+import path from 'path';
+
+import {NextpnrOptions, ProjectConfiguration, TargetConfiguration, TargetDefaultsConfiguration, WorkerId, YosysOptions} from './configuration';
+
+export const getTargetDefaults = (configuration: ProjectConfiguration): TargetDefaultsConfiguration => {
+    return configuration.defaults ?? {};
+};
 
 export const getTarget = (configuration: ProjectConfiguration, targetId: string): TargetConfiguration => {
     const target = configuration.targets.find((target) => target.id === targetId);
@@ -8,12 +14,38 @@ export const getTarget = (configuration: ProjectConfiguration, targetId: string)
     return target;
 };
 
-export const getCombined = (configuration: ProjectConfiguration, targetId: string, workerId: WorkerId, configId: string, generated: string[]) => {
-    const defaultTarget = configuration[workerId] as Record<string, ValueListConfiguration | ValueListConfigurationTarget> | undefined;
-    const target = getTarget(configuration, targetId);
+export const getTargetFile = (target: TargetConfiguration, file: string) => path.join(target.directory ?? '.', file);
 
-    const defaultConfig = defaultTarget ? defaultTarget[configId] : undefined;
-    const config = target[workerId] ? (target[workerId] as Record<string, ValueListConfigurationTarget>)[configId] : undefined;
+type WorkerOptionTypes = {
+    yosys: YosysOptions;
+    nextpnr: NextpnrOptions;
+};
+
+export const getOptions = <W extends WorkerId>(
+    configuration: ProjectConfiguration,
+    targetId: string,
+    workerId: W,
+    defaultValues: WorkerOptionTypes[W]
+): WorkerOptionTypes[W] => {
+    const targetDefaults = getTargetDefaults(configuration)[workerId];
+    const target = getTarget(configuration, targetId)[workerId];
+
+    const defaultConfig = targetDefaults ? targetDefaults.options : undefined;
+    const config = target ? target.options : undefined;
+
+    return {
+        ...defaultValues,
+        ...defaultConfig,
+        ...config
+    };
+};
+
+export const getCombined = (configuration: ProjectConfiguration, targetId: string, workerId: WorkerId, configId: string, generated: string[]) => {
+    const targetDefaults = getTargetDefaults(configuration)[workerId];
+    const target = getTarget(configuration, targetId)[workerId];
+
+    const defaultConfig = targetDefaults ? targetDefaults[configId] : undefined;
+    const config = target ? target[configId] : undefined;
 
     return [
         ...(!config || config.useGenerated) ? generated : [],

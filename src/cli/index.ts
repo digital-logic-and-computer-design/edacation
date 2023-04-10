@@ -1,5 +1,5 @@
 import path from 'path';
-import {readFile, writeFile} from 'fs/promises';
+import {readFile, writeFile, unlink, mkdir} from 'fs/promises';
 
 import {Argv} from 'yargs';
 import yargs from 'yargs/yargs';
@@ -21,6 +21,12 @@ const buildCommandArgs = (yargs: Argv) => {
         .positional('target', {
             type: 'string',
             description: 'EDA target'
+        })
+        .option('execute', {
+            type: 'boolean',
+            description: 'Whether to execute the tool.',
+            default: true,
+            alias: 'x'
         });
 };
 
@@ -92,6 +98,9 @@ if (!(await exists(projectPath))) {
     }
 }
 
+const cwd = path.dirname(projectPath);
+
+const shouldExecute = argv.execute as boolean;
 const targetId = argv.target as string;
 
 // Load project
@@ -118,25 +127,37 @@ console.log(`Device:  ${VENDORS[target.vendor].families[target.family].devices[t
 console.log(`Package: ${VENDORS[target.vendor].packages[target.package]}`);
 console.log();
 
-const cwd = path.dirname(projectPath);
+// Create output directory if necessary
+if (shouldExecute) {
+    const targetDirectory = path.join(cwd, target.directory ?? '.');
+    if (!await exists(targetDirectory)) {
+        await mkdir(targetDirectory, {
+            recursive: true
+        });
+    }
+}
 
 if (command === 'yosys') {
     const workerOptions = generateYosysWorker(project, target.id);
 
     console.log(workerOptions);
 
-    const designFilePath = path.join(cwd, 'design.ys');
-    await writeFile(designFilePath, workerOptions.commands.concat(['']).join('\n'), {encoding: 'utf-8'});
-    executeTool(workerOptions.tool, ['design.ys'], cwd);
+    if (shouldExecute) {
+        const designFilePath = path.join(cwd, 'design.ys');
+        await writeFile(designFilePath, workerOptions.commands.concat(['']).join('\n'), {encoding: 'utf-8'});
 
-    // TODO: wait for tool
-    // await unlink(designFilePath);
+        await executeTool(workerOptions.tool, ['design.ys'], cwd);
+
+        await unlink(designFilePath);
+    }
 } else if (command === 'nextpnr') {
     const workerOptions = generateNextpnrWorker(project, target.id);
 
     console.log(workerOptions);
 
-    executeTool(workerOptions.tool, workerOptions.arguments, cwd);
+    if (shouldExecute) {
+        await executeTool(workerOptions.tool, workerOptions.arguments, cwd);
+    }
 } else {
     console.error(`Unknown command "${command}".`);
     process.exit(1);

@@ -1,0 +1,86 @@
+{
+    "name": "Counter",
+    "inputFiles": [
+        "./src/counter.v"
+    ],
+    "outputFiles": [],
+    "configuration": {
+        "defaults": {
+            "nextpnr": {
+                "options": {
+                    "placedSvg": false,
+                    "routedSvg": false
+                }
+            }
+        },
+        "targets": [
+            {
+                "id": "ecp5",
+                "name": "ECP5 - LFE5U-12 - caBGA381",
+                "vendor": "lattice",
+                "family": "ecp5",
+                "device": "lfe5u-12",
+                "package": "caBGA381",
+
+                "directory": "./out/ecp5",
+
+                "nextpnr": {
+                    "options": {
+                        "placedSvg": true,
+                        "routedSvg": true
+                    }
+                }
+            },
+            {
+                "id": "ice40",
+                "name": "iCE40 - LP8K - cm225",
+                "vendor": "lattice",
+                "family": "ice40",
+                "device": "lp8k",
+                "package": "cm225",
+
+                "directory": "./out/ice40"
+            },
+            {
+                "id": "machxo2",
+                "name": "MachXO2 - XO2-640 - QFN48",
+                "vendor": "lattice",
+                "family": "machxo2",
+                "device": "xo2-640",
+                "package": "QFN48",
+
+                "directory": "./out/machxo2"
+            },
+            {
+                "id": "nexus",
+                "name": "CrossLink-NX - LIFCL-40 - caBGA256",
+                "vendor": "lattice",
+                "family": "crosslink-nx",
+                "device": "lifcl-40",
+                "package": "caBGA256",
+
+                "directory": "./out/nexus"
+            },
+            {
+                "id": "gowin",
+                "name": "LittleBee - GW1N-4 - LQ144",
+                "vendor": "gowin",
+                "family": "littlebee",
+                "device": "gw1n-4",
+                "package": "LQ144",
+
+                "directory": "./out/gowin"
+            },
+            {
+                "id": "generic",
+                "name": "Generic",
+                "vendor": "generic",
+                "family": "generic",
+                "device": "generic",
+                "package": "generic",
+
+                "directory": "./out/generic"
+            }
+        ]
+    }
+}
