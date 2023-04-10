@@ -1,15 +1,4 @@
-import {access} from 'fs/promises';
-
 export type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
-
-export const exists = async (...args: Parameters<typeof access>) => {
-    try {
-        await access(...args);
-        return true;
-    } catch (err) {
-        return false;
-    }
-};
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
