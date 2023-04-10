@@ -107,7 +107,7 @@ export class Project {
         };
     }
 
-    static deserialize(data: ProjectState): Project {
+    static deserialize(data: ProjectState, ..._args: unknown[]): Project {
         const name: string = data.name;
         const inputFiles: string[] = data.inputFiles ?? [];
         const outputFiles: string[] = data.outputFiles ?? [];
