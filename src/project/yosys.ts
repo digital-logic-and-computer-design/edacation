@@ -11,40 +11,51 @@ const DEFAULT_OPTIONS: YosysOptions = {
     optimize: true
 };
 
-export const generateYosysWorker = (project: Project, targetId: string) => {
+export const generateYosysWorkerOptions = (project: Project, targetId: string) => {
     const target = getTarget(project.getConfiguration(), targetId);
     const options = getOptions(project.getConfiguration(), targetId, 'yosys', DEFAULT_OPTIONS);
 
     const vendor = (VENDORS as Record<string, Vendor>)[target.vendor];
     const family = vendor.families[target.family];
 
-    const generatedInputFiles = project.getInputFiles().filter((inputFile) => FILE_EXTENSIONS_HDL.includes(path.extname(inputFile).substring(1)));
-
-    const generatedOutputFiles = [
+    const inputFiles = project.getInputFiles().filter((inputFile) => FILE_EXTENSIONS_HDL.includes(path.extname(inputFile).substring(1)));
+    const outputFiles = [
         getTargetFile(target, `${family.architecture}.json`)
     ];
 
-    const generatedCommands = [
-        ...generatedInputFiles.map((file) => `read_verilog ${file}`),
+    const tool = 'yosys';
+    const commands = [
+        ...inputFiles.map((file) => `read_verilog ${file}`),
         'proc;'
     ];
 
     if (options.optimize) {
-        generatedCommands.push('opt;');
+        commands.push('opt;');
     }
 
     if (family.architecture === 'generic') {
-        generatedCommands.push('synth;');
-        generatedCommands.push(`write_json ${generatedOutputFiles[0]};`);
+        commands.push('synth;');
+        commands.push(`write_json ${outputFiles[0]};`);
     } else {
-        generatedCommands.push(`synth_${family.architecture} -json ${generatedOutputFiles[0]};`);
+        commands.push(`synth_${family.architecture} -json ${outputFiles[0]};`);
     }
 
-    const inputFiles = getCombined(project.getConfiguration(), targetId, 'yosys', 'inputFiles', generatedInputFiles);
-    const outputFiles = getCombined(project.getConfiguration(), targetId, 'yosys', 'outputFiles', generatedOutputFiles);
+    return {
+        inputFiles: inputFiles,
+        outputFiles: outputFiles,
+        tool,
+        commands: commands
+    };
+};
 
-    const tool = 'yosys';
-    const commands = getCombined(project.getConfiguration(), targetId, 'yosys', 'commands', generatedCommands);
+export const getYosysWorkerOptions = (project: Project, targetId: string) => {
+    const generated = generateYosysWorkerOptions(project, targetId);
+
+    const inputFiles = getCombined(project.getConfiguration(), targetId, 'yosys', 'inputFiles', generated.inputFiles);
+    const outputFiles = getCombined(project.getConfiguration(), targetId, 'yosys', 'outputFiles', generated.outputFiles);
+
+    const tool = generated.tool;
+    const commands = getCombined(project.getConfiguration(), targetId, 'yosys', 'commands', generated.commands);
 
     return {
         inputFiles,
@@ -53,7 +64,6 @@ export const generateYosysWorker = (project: Project, targetId: string) => {
         commands
     };
 };
-
 
 export const generateYosysRTLCommands = (inputFiles: string[]): string[] => {
     const verilogFiles = inputFiles.filter((file) => FILE_EXTENSIONS_VERILOG.includes(path.extname(file).substring(1)));

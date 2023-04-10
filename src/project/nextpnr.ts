@@ -9,7 +9,7 @@ const DEFAULT_OPTIONS: NextpnrOptions = {
     routedJson: true
 };
 
-export const generateNextpnrWorker = (project: Project, targetId: string) => {
+export const generateNextpnrWorkerOptions = (project: Project, targetId: string) => {
     const target = getTarget(project.getConfiguration(), targetId);
     const options = getOptions(project.getConfiguration(), targetId, 'nextpnr', DEFAULT_OPTIONS);
 
@@ -17,29 +17,31 @@ export const generateNextpnrWorker = (project: Project, targetId: string) => {
     const family = vendor.families[target.family];
     const device = family.devices[target.device];
 
-    const generatedInputFiles = [
+    const inputFiles = [
         getTargetFile(target, `${family.architecture}.json`)
     ];
 
-    const generatedOutputFiles: string[] = [];
-    const generatedArgs: string[] = [];
+    const outputFiles: string[] = [];
+
+    const tool = `nextpnr-${family.architecture}`;
+    const args: string[] = [];
 
     switch (family.architecture) {
         case 'ecp5': {
-            generatedArgs.push(`--${device.device}`);
-            generatedArgs.push('--package', target.package.toUpperCase());
+            args.push(`--${device.device}`);
+            args.push('--package', target.package.toUpperCase());
             break;
         }
         case 'generic': {
             break;
         }
         case 'gowin': {
-            generatedArgs.push('--device', `${device.device.replace('-', '-UV')}${target.package}C5/I4`);
+            args.push('--device', `${device.device.replace('-', '-UV')}${target.package}C5/I4`);
             break;
         }
         case 'ice40': {
-            generatedArgs.push(`--${device.device}`);
-            generatedArgs.push('--package', target.package);
+            args.push(`--${device.device}`);
+            args.push('--package', target.package);
             break;
         }
         case 'nexus': {
@@ -56,7 +58,7 @@ export const generateNextpnrWorker = (project: Project, targetId: string) => {
                 throw new Error(`Package "${target.package}" is currenty not supported.`);
             }
 
-            generatedArgs.push('--device', `${device.device}-7${packageLookup[target.package]}C`);
+            args.push('--device', `${device.device}-7${packageLookup[target.package]}C`);
             break;
         }
         default: {
@@ -64,29 +66,40 @@ export const generateNextpnrWorker = (project: Project, targetId: string) => {
         }
     }
 
-    generatedArgs.push('--json', generatedInputFiles[0]);
+    args.push('--json', inputFiles[0]);
 
     if (options.placedSvg) {
         const file = getTargetFile(target, 'placed.svg');
-        generatedOutputFiles.push(file);
-        generatedArgs.push('--placed-svg', file);
+        outputFiles.push(file);
+        args.push('--placed-svg', file);
     }
     if (options.routedSvg) {
         const file = getTargetFile(target, 'routed.svg');
-        generatedOutputFiles.push(file);
-        generatedArgs.push('--routed-svg', file);
+        outputFiles.push(file);
+        args.push('--routed-svg', file);
     }
     if (options.routedJson) {
         const file = getTargetFile(target, 'routed.nextpnr.json');
-        generatedOutputFiles.push(file);
-        generatedArgs.push('--write', file);
+        outputFiles.push(file);
+        args.push('--write', file);
     }
 
-    const inputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'inputFiles', generatedInputFiles);
-    const outputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'outputFiles', generatedOutputFiles);
+    return {
+        inputFiles,
+        outputFiles,
+        tool,
+        arguments: args
+    };
+};
 
-    const tool = `nextpnr-${family.architecture}`;
-    const args = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'arguments', generatedArgs);
+export const getNextpnrWorkerOptions = (project: Project, targetId: string) => {
+    const generated = generateNextpnrWorkerOptions(project, targetId);
+
+    const inputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'inputFiles', generated.inputFiles);
+    const outputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'outputFiles', generated.outputFiles);
+
+    const tool = generated.tool;
+    const args = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'arguments', generated.arguments);
 
     return {
         inputFiles,

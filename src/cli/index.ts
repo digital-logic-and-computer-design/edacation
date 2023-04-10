@@ -7,7 +7,7 @@ import {Argv} from 'yargs';
 import yargs from 'yargs/yargs';
 import {hideBin} from 'yargs/helpers';
 
-import {Project, VENDORS, generateNextpnrWorker, generateYosysWorker} from '../project/index.js';
+import {Project, VENDORS, getNextpnrWorkerOptions, getYosysWorkerOptions} from '../project/index.js';
 
 import {executeTool} from './tool.js';
 import {exists} from './util.js';
@@ -141,9 +141,11 @@ if (shouldExecute) {
 }
 
 if (command === 'yosys') {
-    const workerOptions = generateYosysWorker(project, target.id);
+    const workerOptions = getYosysWorkerOptions(project, target.id);
 
-    console.log(workerOptions);
+    console.log([workerOptions.tool, ''].concat(workerOptions.commands).join('\n'));
+    console.log();
+
 
     if (shouldExecute) {
         const designFilePath = path.join(cwd, 'design.ys');
@@ -154,9 +156,10 @@ if (command === 'yosys') {
         await unlink(designFilePath);
     }
 } else if (command === 'nextpnr') {
-    const workerOptions = generateNextpnrWorker(project, target.id);
+    const workerOptions = getNextpnrWorkerOptions(project, target.id);
 
-    console.log(workerOptions);
+    console.log([workerOptions.tool].concat(workerOptions.arguments).join(' '));
+    console.log();
 
     if (shouldExecute) {
         await executeTool(workerOptions.tool, workerOptions.arguments, cwd);
