@@ -20,7 +20,8 @@ export class Project {
         name: string,
         inputFiles: string[] = [],
         outputFiles: string[] = [],
-        configuration: ProjectConfiguration = DEFAULT_CONFIGURATION
+        configuration: ProjectConfiguration = DEFAULT_CONFIGURATION,
+        ..._additionalData: unknown[]
     ) {
 
         this.name = name;
@@ -107,13 +108,13 @@ export class Project {
         };
     }
 
-    static deserialize(data: ProjectState): Project {
+    static deserialize(data: ProjectState, ...additionalData: unknown[]): Project {
         const name: string = data.name;
         const inputFiles: string[] = data.inputFiles ?? [];
         const outputFiles: string[] = data.outputFiles ?? [];
         const configuration: ProjectConfiguration = data.configuration ?? {};
 
-        return new Project(name, inputFiles, outputFiles, configuration);
+        return new Project(name, inputFiles, outputFiles, configuration, ...additionalData);
     }
 
     static async load(rawData: Uint8Array): Promise<Project> {
