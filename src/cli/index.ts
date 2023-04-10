@@ -8,10 +8,10 @@ import yargs from 'yargs/yargs';
 import {hideBin} from 'yargs/helpers';
 
 import {Project, VENDORS, getNextpnrWorkerOptions, getYosysWorkerOptions} from '../project/index.js';
+import {formatArguments} from '../util.js';
 
 import {executeTool} from './tool.js';
 import {exists} from './util.js';
-import {formatArguments} from '../util.js';
 
 console.log('EDAcation CLI');
 console.log();
