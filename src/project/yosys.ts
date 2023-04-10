@@ -5,20 +5,20 @@ import {FILE_EXTENSIONS_VERILOG, FILE_EXTENSIONS_HDL} from '../util.js';
 import {VENDORS, Vendor} from './devices.js';
 import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
 import {Project} from './project.js';
-import {YosysOptions} from './configuration.js';
+import {ProjectConfiguration, YosysOptions} from './configuration.js';
 
 const DEFAULT_OPTIONS: YosysOptions = {
     optimize: true
 };
 
-export const generateYosysWorkerOptions = (project: Project, targetId: string) => {
-    const target = getTarget(project.getConfiguration(), targetId);
-    const options = getOptions(project.getConfiguration(), targetId, 'yosys', DEFAULT_OPTIONS);
+export const generateYosysWorkerOptions = (configuration: ProjectConfiguration, projectInputFiles: string[], targetId: string) => {
+    const target = getTarget(configuration, targetId);
+    const options = getOptions(configuration, targetId, 'yosys', DEFAULT_OPTIONS);
 
     const vendor = (VENDORS as Record<string, Vendor>)[target.vendor];
     const family = vendor.families[target.family];
 
-    const inputFiles = project.getInputFiles().filter((inputFile) => FILE_EXTENSIONS_HDL.includes(path.extname(inputFile).substring(1)));
+    const inputFiles = projectInputFiles.filter((inputFile) => FILE_EXTENSIONS_HDL.includes(path.extname(inputFile).substring(1)));
     const outputFiles = [
         getTargetFile(target, `${family.architecture}.json`)
     ];
@@ -49,7 +49,7 @@ export const generateYosysWorkerOptions = (project: Project, targetId: string) =
 };
 
 export const getYosysWorkerOptions = (project: Project, targetId: string) => {
-    const generated = generateYosysWorkerOptions(project, targetId);
+    const generated = generateYosysWorkerOptions(project.getConfiguration(), project.getInputFiles(), targetId);
 
     const inputFiles = getCombined(project.getConfiguration(), targetId, 'yosys', 'inputFiles', generated.inputFiles);
     const outputFiles = getCombined(project.getConfiguration(), targetId, 'yosys', 'outputFiles', generated.outputFiles);

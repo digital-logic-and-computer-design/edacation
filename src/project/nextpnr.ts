@@ -1,4 +1,4 @@
-import {NextpnrOptions} from './configuration.js';
+import {NextpnrOptions, ProjectConfiguration} from './configuration.js';
 import {VENDORS, Vendor} from './devices.js';
 import {Project} from './project.js';
 import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
@@ -9,9 +9,9 @@ const DEFAULT_OPTIONS: NextpnrOptions = {
     routedJson: true
 };
 
-export const generateNextpnrWorkerOptions = (project: Project, targetId: string) => {
-    const target = getTarget(project.getConfiguration(), targetId);
-    const options = getOptions(project.getConfiguration(), targetId, 'nextpnr', DEFAULT_OPTIONS);
+export const generateNextpnrWorkerOptions = (configuration: ProjectConfiguration, targetId: string) => {
+    const target = getTarget(configuration, targetId);
+    const options = getOptions(configuration, targetId, 'nextpnr', DEFAULT_OPTIONS);
 
     const vendor = (VENDORS as Record<string, Vendor>)[target.vendor];
     const family = vendor.families[target.family];
@@ -93,7 +93,7 @@ export const generateNextpnrWorkerOptions = (project: Project, targetId: string)
 };
 
 export const getNextpnrWorkerOptions = (project: Project, targetId: string) => {
-    const generated = generateNextpnrWorkerOptions(project, targetId);
+    const generated = generateNextpnrWorkerOptions(project.getConfiguration(), targetId);
 
     const inputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'inputFiles', generated.inputFiles);
     const outputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'outputFiles', generated.outputFiles);
