@@ -11,6 +11,7 @@ import {Project, VENDORS, getNextpnrWorkerOptions, getYosysWorkerOptions} from '
 
 import {executeTool} from './tool.js';
 import {exists} from './util.js';
+import {formatArguments} from '../util.js';
 
 console.log('EDAcation CLI');
 console.log();
@@ -157,7 +158,7 @@ if (command === 'yosys') {
 } else if (command === 'nextpnr') {
     const workerOptions = getNextpnrWorkerOptions(project, target.id);
 
-    console.log([workerOptions.tool].concat(workerOptions.arguments).join(' '));
+    console.log([workerOptions.tool].concat(formatArguments(workerOptions.arguments)).join('\n'));
     console.log();
 
     if (shouldExecute) {
