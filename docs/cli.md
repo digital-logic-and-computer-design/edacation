@@ -1,4 +1,5 @@
-# Usage
+# CLI
+
 ```
 EDAcation CLI
 
@@ -14,7 +15,7 @@ Options:
   --help     Show help                                                 [boolean]
 ```
 
-Commands
+**Commands**
 - [`edacation init`](#edacation-init)
 - [`edacation yosys`](#edacation-yosys)
 - [`edacation nextpnr`](#edacation-nextpnr)
