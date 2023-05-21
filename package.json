@@ -2,7 +2,7 @@
     "name": "edacation",
     "description": "Library and CLI for interacting with Yosys and nextpnr.",
     "license": "MIT",
-    "version": "0.1.12",
+    "version": "0.2.0",
     "contributors": [
         "Danielle Huisman <danielle@huisman.me> (https://github.com/DanielleHuisman)"
     ],
@@ -34,6 +34,7 @@
     "dependencies": {
         "@types/node": "^18.15.11",
         "@types/yargs": "^17.0.24",
+        "string-args-parser": "^1.0.4",
         "yargs": "^17.7.1",
         "zod": "^3.21.4"
     },
