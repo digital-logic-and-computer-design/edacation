@@ -35,7 +35,16 @@ export const getOptions = <W extends WorkerId>(
     };
 };
 
-export const getCombined = (configuration: ProjectConfiguration, targetId: string, workerId: WorkerId, configId: string, generated: string[]) => {
+const defaultParse = (values: string[]) => values;
+
+export const getCombined = (
+    configuration: ProjectConfiguration,
+    targetId: string,
+    workerId: WorkerId,
+    configId: string,
+    generated: string[],
+    parse: (values: string[]) => string[] = defaultParse
+) => {
     const targetDefaults = getTargetDefaults(configuration)[workerId];
     const target = getTarget(configuration, targetId)[workerId];
 
@@ -44,7 +53,7 @@ export const getCombined = (configuration: ProjectConfiguration, targetId: strin
 
     return [
         ...(!config || config.useGenerated) ? generated : [],
-        ...(!config || config.useDefault) && !!defaultConfig ? defaultConfig.values : [],
-        ...(config ? config.values : [])
+        ...(!config || config.useDefault) && !!defaultConfig ? parse(defaultConfig.values) : [],
+        ...(config ? parse(config.values) : [])
     ];
 };

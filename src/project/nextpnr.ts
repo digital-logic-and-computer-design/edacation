@@ -1,3 +1,5 @@
+import {parseArgs} from 'string-args-parser';
+
 import {NextpnrOptions, ProjectConfiguration} from './configuration.js';
 import {VENDORS, Vendor} from './devices.js';
 import {Project} from './project.js';
@@ -99,6 +101,8 @@ export const generateNextpnrWorkerOptions = (configuration: ProjectConfiguration
     };
 };
 
+export const parseNextpnrArguments = (args: string[]) => args.flatMap((arg) => parseArgs(arg));
+
 export const getNextpnrWorkerOptions = (project: Project, targetId: string): NextpnrWorkerOptions => {
     const generated = generateNextpnrWorkerOptions(project.getConfiguration(), targetId);
 
@@ -106,7 +110,7 @@ export const getNextpnrWorkerOptions = (project: Project, targetId: string): Nex
     const outputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'outputFiles', generated.outputFiles);
 
     const tool = generated.tool;
-    const args = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'arguments', generated.arguments);
+    const args = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'arguments', generated.arguments, parseNextpnrArguments);
 
     return {
         inputFiles,
