@@ -85,6 +85,7 @@ export const generateYosysRTLCommands = (inputFiles: string[]): string[] => {
         'memory -nomap;',
         'wreduce -memx;',
         'opt -full;',
+        'tee -q -o stats.digitaljs.json stat -json *;',
         'write_json rtl.digitaljs.json',
         ''
     ];
