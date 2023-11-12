@@ -32,7 +32,7 @@ export const generateYosysWorkerOptions = (configuration: ProjectConfiguration, 
 
     const tool = 'yosys';
     const commands = [
-        ...inputFiles.map((file) => `read_verilog ${file}`),
+        ...inputFiles.map((file) => `read_verilog -sv ${file}`),
         'proc;'
     ];
 
@@ -78,7 +78,7 @@ export const generateYosysRTLCommands = (inputFiles: string[]): string[] => {
     // Yosys commands taken from yosys2digitaljs (https://github.com/tilk/yosys2digitaljs/blob/1b4afeae61/src/index.js#L1225)
 
     return [
-        ...verilogFiles.map((file) => `read_verilog ${file}`),
+        ...verilogFiles.map((file) => `read_verilog -sv ${file}`),
         'hierarchy -auto-top',
         'proc;',
         'opt;',
@@ -95,13 +95,13 @@ export const generateYosysSynthCommands = (inputFiles: string[]): string[] => {
     const verilogFiles = inputFiles.filter((file) => FILE_EXTENSIONS_VERILOG.includes(path.extname(file).substring(1)));
 
     return [
-        ...verilogFiles.map((file) => `read_verilog ${file}`),
+        ...verilogFiles.map((file) => `read_verilog -sv ${file}`),
         'proc;',
         'opt;',
         'synth -lut 4',
         'write_json luts.digitaljs.json',
         'design -reset',
-        ...verilogFiles.map((file) => `read_verilog ${file}`),
+        ...verilogFiles.map((file) => `read_verilog -sv ${file}`),
         'proc;',
         'opt;',
         'synth_ecp5 -json ecp5.json;',
