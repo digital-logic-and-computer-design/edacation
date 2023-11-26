@@ -1,6 +1,6 @@
 import {decodeJSON, encodeJSON} from '../util.js';
 
-import {DEFAULT_CONFIGURATION, ProjectConfiguration, schemaProjectConfiguration} from './configuration.js';
+import {DEFAULT_CONFIGURATION, type ProjectConfiguration, schemaProjectConfiguration} from './configuration.js';
 
 export interface ProjectState {
     name: string;
@@ -10,7 +10,6 @@ export interface ProjectState {
 }
 
 export class Project {
-
     private name: string;
     private inputFiles: string[];
     private outputFiles: string[];
@@ -22,7 +21,6 @@ export class Project {
         outputFiles: string[] = [],
         configuration: ProjectConfiguration = DEFAULT_CONFIGURATION
     ) {
-
         this.name = name;
         this.inputFiles = inputFiles;
         this.outputFiles = outputFiles;
@@ -31,7 +29,7 @@ export class Project {
         if (config.success) {
             this.configuration = config.data;
         } else {
-            throw new Error(`Failed to parse project configuration: ${config.error}`);
+            throw new Error(`Failed to parse project configuration: ${config.error.toString()}`);
         }
     }
 
@@ -47,7 +45,7 @@ export class Project {
         return this.inputFiles.some((file) => file === filePath);
     }
 
-    async addInputFiles(filePaths: string[]) {
+    addInputFiles(filePaths: string[]) {
         for (const filePath of filePaths) {
             if (!this.hasInputFile(filePath)) {
                 this.inputFiles.push(filePath);
@@ -59,7 +57,7 @@ export class Project {
         });
     }
 
-    async removeInputFiles(filePaths: string[]) {
+    removeInputFiles(filePaths: string[]) {
         this.inputFiles = this.inputFiles.filter((file) => !filePaths.includes(file));
     }
 
@@ -71,7 +69,7 @@ export class Project {
         return this.outputFiles.some((file) => file === filePath);
     }
 
-    async addOutputFiles(filePaths: string[]) {
+    addOutputFiles(filePaths: string[]) {
         for (const filePath of filePaths) {
             if (!this.hasOutputFile(filePath)) {
                 this.outputFiles.push(filePath);
@@ -83,7 +81,7 @@ export class Project {
         });
     }
 
-    async removeOutputFiles(filePaths: string[]) {
+    removeOutputFiles(filePaths: string[]) {
         this.outputFiles = this.outputFiles.filter((file) => !filePaths.includes(file));
     }
 
@@ -116,13 +114,13 @@ export class Project {
         return new Project(name, inputFiles, outputFiles, configuration);
     }
 
-    static async loadFromData(rawData: Uint8Array): Promise<Project> {
+    static loadFromData(rawData: Uint8Array): Project {
         const data = decodeJSON(rawData);
-        const project = Project.deserialize(data);
+        const project = Project.deserialize(data as ProjectState);
         return project;
     }
 
-    static async storeToData(project: Project): Promise<Uint8Array> {
+    static storeToData(project: Project): Uint8Array {
         const data = Project.serialize(project);
         return encodeJSON(data, true);
     }

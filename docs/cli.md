@@ -16,12 +16,15 @@ Options:
 ```
 
 **Commands**
-- [`edacation init`](#edacation-init)
-- [`edacation yosys`](#edacation-yosys)
-- [`edacation nextpnr`](#edacation-nextpnr)
+
+-   [`edacation init`](#edacation-init)
+-   [`edacation yosys`](#edacation-yosys)
+-   [`edacation nextpnr`](#edacation-nextpnr)
 
 ## `edacation init`
+
 ### Help
+
 ```
 edacation init <project>
 
@@ -37,12 +40,15 @@ Options:
 ```
 
 ### Example
+
 ```
 edacation init counter
 ```
 
 ## `edacation yosys`
+
 ### Help
+
 ```
 edacation yosys <project> <target>
 
@@ -59,12 +65,15 @@ Options:
 ```
 
 ### Example
+
 ```
 edacation nextpnr counter ecp5
 ```
 
 ## `edacation nextpnr`
+
 ### Help
+
 ```
 edacation nextpnr <project> <target>
 
@@ -81,6 +90,7 @@ Options:
 ```
 
 #### Example
+
 ```
 edacation nextpnr counter ecp5
 ```

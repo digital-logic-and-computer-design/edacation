@@ -1,11 +1,11 @@
 import path from 'path';
 
-import {FILE_EXTENSIONS_VERILOG, FILE_EXTENSIONS_HDL} from '../util.js';
+import {FILE_EXTENSIONS_HDL, FILE_EXTENSIONS_VERILOG} from '../util.js';
 
-import {VENDORS, Vendor} from './devices.js';
+import type {ProjectConfiguration, YosysOptions} from './configuration.js';
+import {VENDORS, type Vendor} from './devices.js';
+import type {Project} from './project.js';
 import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
-import {Project} from './project.js';
-import {ProjectConfiguration, YosysOptions} from './configuration.js';
 
 export interface YosysWorkerOptions {
     inputFiles: string[];
@@ -18,23 +18,24 @@ const DEFAULT_OPTIONS: YosysOptions = {
     optimize: true
 };
 
-export const generateYosysWorkerOptions = (configuration: ProjectConfiguration, projectInputFiles: string[], targetId: string): YosysWorkerOptions => {
+export const generateYosysWorkerOptions = (
+    configuration: ProjectConfiguration,
+    projectInputFiles: string[],
+    targetId: string
+): YosysWorkerOptions => {
     const target = getTarget(configuration, targetId);
     const options = getOptions(configuration, targetId, 'yosys', DEFAULT_OPTIONS);
 
     const vendor = (VENDORS as Record<string, Vendor>)[target.vendor];
     const family = vendor.families[target.family];
 
-    const inputFiles = projectInputFiles.filter((inputFile) => FILE_EXTENSIONS_HDL.includes(path.extname(inputFile).substring(1)));
-    const outputFiles = [
-        getTargetFile(target, `${family.architecture}.json`)
-    ];
+    const inputFiles = projectInputFiles.filter((inputFile) =>
+        FILE_EXTENSIONS_HDL.includes(path.extname(inputFile).substring(1))
+    );
+    const outputFiles = [getTargetFile(target, `${family.architecture}.json`)];
 
     const tool = 'yosys';
-    const commands = [
-        ...inputFiles.map((file) => `read_verilog -sv ${file}`),
-        'proc;'
-    ];
+    const commands = [...inputFiles.map((file) => `read_verilog -sv ${file}`), 'proc;'];
 
     if (options.optimize) {
         commands.push('opt;');
@@ -59,7 +60,13 @@ export const getYosysWorkerOptions = (project: Project, targetId: string): Yosys
     const generated = generateYosysWorkerOptions(project.getConfiguration(), project.getInputFiles(), targetId);
 
     const inputFiles = getCombined(project.getConfiguration(), targetId, 'yosys', 'inputFiles', generated.inputFiles);
-    const outputFiles = getCombined(project.getConfiguration(), targetId, 'yosys', 'outputFiles', generated.outputFiles);
+    const outputFiles = getCombined(
+        project.getConfiguration(),
+        targetId,
+        'yosys',
+        'outputFiles',
+        generated.outputFiles
+    );
 
     const tool = generated.tool;
     const commands = getCombined(project.getConfiguration(), targetId, 'yosys', 'commands', generated.commands);

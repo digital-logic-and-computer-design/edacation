@@ -1,6 +1,7 @@
 # Installation
 
 ## Local
+
 Install the Node.js package as a (dev) dependency in your repository to access the CLI and library.
 
 ```shell
@@ -21,6 +22,7 @@ yarn add --dev edacation
 ```
 
 ## Global
+
 Install the Node.js package as a global dependency to access the CLI on your entire system.
 
 ```shell
@@ -35,4 +37,5 @@ yarn global add edacation
 ```
 
 ## Next steps
+
 See the [usage documentation](usage.md).

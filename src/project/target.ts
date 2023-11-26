@@ -1,6 +1,14 @@
 import path from 'path';
 
-import {ProjectConfiguration, TargetConfiguration, TargetDefaultsConfiguration, TargetOptionTypes, WorkerId} from './configuration.js';
+import type {
+    ProjectConfiguration,
+    TargetConfiguration,
+    TargetDefaultsConfiguration,
+    TargetOptionTypes,
+    ValueListConfiguration,
+    ValueListConfigurationTarget,
+    WorkerId
+} from './configuration.js';
 
 export const getTargetDefaults = (configuration: ProjectConfiguration): TargetDefaultsConfiguration => {
     return configuration.defaults ?? {};
@@ -48,12 +56,12 @@ export const getCombined = (
     const targetDefaults = getTargetDefaults(configuration)[workerId];
     const target = getTarget(configuration, targetId)[workerId];
 
-    const defaultConfig = targetDefaults ? targetDefaults[configId] : undefined;
-    const config = target ? target[configId] : undefined;
+    const defaultConfig = targetDefaults ? (targetDefaults[configId] as ValueListConfiguration) : undefined;
+    const config = target ? (target[configId] as ValueListConfigurationTarget) : undefined;
 
     return [
-        ...(!config || config.useGenerated) ? generated : [],
-        ...(!config || config.useDefault) && !!defaultConfig ? parse(defaultConfig.values) : [],
+        ...(!config || config.useGenerated ? generated : []),
+        ...((!config || config.useDefault) && !!defaultConfig ? parse(defaultConfig.values) : []),
         ...(config ? parse(config.values) : [])
     ];
 };

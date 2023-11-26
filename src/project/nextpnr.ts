@@ -1,8 +1,8 @@
 import {parseArgs} from 'string-args-parser';
 
-import {NextpnrOptions, ProjectConfiguration} from './configuration.js';
-import {VENDORS, Vendor} from './devices.js';
-import {Project} from './project.js';
+import type {NextpnrOptions, ProjectConfiguration} from './configuration.js';
+import {VENDORS, type Vendor} from './devices.js';
+import type {Project} from './project.js';
 import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
 
 export interface NextpnrWorkerOptions {
@@ -18,7 +18,10 @@ const DEFAULT_OPTIONS: NextpnrOptions = {
     routedJson: true
 };
 
-export const generateNextpnrWorkerOptions = (configuration: ProjectConfiguration, targetId: string): NextpnrWorkerOptions => {
+export const generateNextpnrWorkerOptions = (
+    configuration: ProjectConfiguration,
+    targetId: string
+): NextpnrWorkerOptions => {
     const target = getTarget(configuration, targetId);
     const options = getOptions(configuration, targetId, 'nextpnr', DEFAULT_OPTIONS);
 
@@ -26,9 +29,7 @@ export const generateNextpnrWorkerOptions = (configuration: ProjectConfiguration
     const family = vendor.families[target.family];
     const device = family.devices[target.device];
 
-    const inputFiles = [
-        getTargetFile(target, `${family.architecture}.json`)
-    ];
+    const inputFiles = [getTargetFile(target, `${family.architecture}.json`)];
 
     const outputFiles: string[] = [];
 
@@ -107,10 +108,23 @@ export const getNextpnrWorkerOptions = (project: Project, targetId: string): Nex
     const generated = generateNextpnrWorkerOptions(project.getConfiguration(), targetId);
 
     const inputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'inputFiles', generated.inputFiles);
-    const outputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'outputFiles', generated.outputFiles);
+    const outputFiles = getCombined(
+        project.getConfiguration(),
+        targetId,
+        'nextpnr',
+        'outputFiles',
+        generated.outputFiles
+    );
 
     const tool = generated.tool;
-    const args = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'arguments', generated.arguments, parseNextpnrArguments);
+    const args = getCombined(
+        project.getConfiguration(),
+        targetId,
+        'nextpnr',
+        'arguments',
+        generated.arguments,
+        parseNextpnrArguments
+    );
 
     return {
         inputFiles,
