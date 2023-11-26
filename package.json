@@ -2,7 +2,7 @@
     "name": "edacation",
     "description": "Library and CLI for interacting with Yosys and nextpnr.",
     "license": "MIT",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "contributors": [
         "Danielle Huisman <danielle@huisman.me> (https://github.com/DanielleHuisman)",
         "Mike Almeloo <git@mikealmel.ooo> (https://github.com/DismissedGuy)"
@@ -28,7 +28,7 @@
         "lint": "eslint ./src --ext ts",
         "clean": "rm -rf dist",
         "build": "yarn run clean && yarn run lint && tsc",
-        "prepublish": "yarn run build",
+        "prepare": "yarn run build",
         "dev": "node --loader ts-node/esm src/cli/index.ts"
     },
     "dependencies": {
