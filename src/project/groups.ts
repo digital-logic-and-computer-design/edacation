@@ -26,22 +26,32 @@ const elementGroups: ElementGroup[] = [
     }
 ];
 
-const elemLookupTable: Map<string, ElementGroup> = new Map();
+let elemLookupTable: Map<string, ElementGroup> | null = null;
 
-export const getElementGroup = (primFqn: string): ElementGroup | null => {
-    // Build lookup table for future use
-    if (elemLookupTable.size === 0) {
-        for (const group of elementGroups) {
-            for (const elem of group.elements) {
-                if (elemLookupTable.get(elem) !== undefined) {
-                    console.warn(
-                        `Element ${elem} is specified twice in the groups definition. Overwriting to "${group.name}".`
-                    );
-                }
-                elemLookupTable.set(elem, group);
+export const getElementGroups = (): Map<string, ElementGroup> => {
+    if (elemLookupTable === null) {
+        elemLookupTable = buildElemTable();
+    }
+    return elemLookupTable;
+};
+
+export const getElementGroup = (primName: string): ElementGroup | null => {
+    return getElementGroups().get(primName) ?? null;
+};
+
+const buildElemTable = (): Map<string, ElementGroup> => {
+    const table: Map<string, ElementGroup> = new Map();
+
+    for (const group of elementGroups) {
+        for (const elem of group.elements) {
+            if (table.get(elem) !== undefined) {
+                console.warn(
+                    `Element ${elem} is specified twice in the groups definition. Overwriting to "${group.name}".`
+                );
             }
+            table.set(elem, group);
         }
     }
 
-    return elemLookupTable.get(primFqn) ?? null;
+    return table;
 };
