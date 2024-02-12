@@ -86,32 +86,30 @@ export const generateYosysRTLCommands = (inputFiles: string[]): string[] => {
 
     return [
         ...verilogFiles.map((file) => `read_verilog -sv ${file}`),
-        'hierarchy -auto-top',
+        'hierarchy -auto-top;',
         'proc;',
         'opt;',
         'memory -nomap;',
         'wreduce -memx;',
         'opt -full;',
         'tee -q -o stats.digitaljs.json stat -json -width *;',
-        'write_json rtl.digitaljs.json',
+        'write_json rtl.digitaljs.json;',
         ''
     ];
 };
 
-export const generateYosysSynthCommands = (inputFiles: string[]): string[] => {
+export const generateYosysSynthPrepareCommands = (inputFiles: string[]): string[] => {
     const verilogFiles = inputFiles.filter((file) => FILE_EXTENSIONS_VERILOG.includes(path.extname(file).substring(1)));
 
     return [
         ...verilogFiles.map((file) => `read_verilog -sv ${file}`),
         'proc;',
         'opt;',
-        'synth -lut 4',
-        'write_json luts.digitaljs.json',
-        'design -reset',
-        ...verilogFiles.map((file) => `read_verilog -sv ${file}`),
-        'proc;',
-        'opt;',
-        'synth_ecp5 -json ecp5.json;',
+        'write_json presynth.digitaljs.json;',
         ''
     ];
+};
+
+export const generateYosysSynthCommands = (): string[] => {
+    return ['read_json presynth.digitaljs.json', 'synth_ecp5 -json ecp5.json;', ''];
 };
