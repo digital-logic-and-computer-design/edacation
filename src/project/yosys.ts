@@ -2,16 +2,12 @@ import path from 'path';
 
 import {FILE_EXTENSIONS_HDL, FILE_EXTENSIONS_VERILOG} from '../util.js';
 
-import type {ProjectConfiguration, TargetConfiguration, YosysOptions} from './configuration.js';
+import type {ProjectConfiguration, WorkerOptions, YosysOptions} from './configuration.js';
 import {VENDORS} from './devices.js';
 import type {Project} from './project.js';
 import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
 
-export interface YosysWorkerOptions {
-    inputFiles: string[];
-    outputFiles: string[];
-    tool: string;
-    target: TargetConfiguration;
+export interface YosysWorkerOptions extends WorkerOptions {
     commands: string[];
 }
 

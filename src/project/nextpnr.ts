@@ -1,14 +1,11 @@
 import {parseArgs} from 'string-args-parser';
 
-import type {NextpnrOptions, ProjectConfiguration} from './configuration.js';
+import type {NextpnrOptions, ProjectConfiguration, WorkerOptions} from './configuration.js';
 import {VENDORS} from './devices.js';
 import type {Project} from './project.js';
 import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
 
-export interface NextpnrWorkerOptions {
-    inputFiles: string[];
-    outputFiles: string[];
-    tool: string;
+export interface NextpnrWorkerOptions extends WorkerOptions {
     arguments: string[];
 }
 
@@ -98,6 +95,7 @@ export const generateNextpnrWorkerOptions = (
         inputFiles,
         outputFiles,
         tool,
+        target,
         arguments: args
     };
 };
@@ -117,6 +115,7 @@ export const getNextpnrWorkerOptions = (project: Project, targetId: string): Nex
     );
 
     const tool = generated.tool;
+    const target = generated.target;
     const args = getCombined(
         project.getConfiguration(),
         targetId,
@@ -130,6 +129,7 @@ export const getNextpnrWorkerOptions = (project: Project, targetId: string): Nex
         inputFiles,
         outputFiles,
         tool,
+        target,
         arguments: args
     };
 };
