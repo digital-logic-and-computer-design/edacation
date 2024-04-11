@@ -1,14 +1,11 @@
 import {parseArgs} from 'string-args-parser';
 
-import type {NextpnrOptions, ProjectConfiguration} from './configuration.js';
-import {VENDORS, type Vendor} from './devices.js';
+import type {NextpnrOptions, ProjectConfiguration, WorkerOptions} from './configuration.js';
+import {VENDORS} from './devices.js';
 import type {Project} from './project.js';
 import {getCombined, getOptions, getTarget, getTargetFile} from './target.js';
 
-export interface NextpnrWorkerOptions {
-    inputFiles: string[];
-    outputFiles: string[];
-    tool: string;
+export interface NextpnrWorkerOptions extends WorkerOptions {
     arguments: string[];
 }
 
@@ -25,7 +22,7 @@ export const generateNextpnrWorkerOptions = (
     const target = getTarget(configuration, targetId);
     const options = getOptions(configuration, targetId, 'nextpnr', DEFAULT_OPTIONS);
 
-    const vendor = (VENDORS as Record<string, Vendor>)[target.vendor];
+    const vendor = VENDORS[target.vendor];
     const family = vendor.families[target.family];
     const device = family.devices[target.device];
 
@@ -98,6 +95,7 @@ export const generateNextpnrWorkerOptions = (
         inputFiles,
         outputFiles,
         tool,
+        target,
         arguments: args
     };
 };
@@ -117,6 +115,7 @@ export const getNextpnrWorkerOptions = (project: Project, targetId: string): Nex
     );
 
     const tool = generated.tool;
+    const target = generated.target;
     const args = getCombined(
         project.getConfiguration(),
         targetId,
@@ -130,6 +129,7 @@ export const getNextpnrWorkerOptions = (project: Project, targetId: string): Nex
         inputFiles,
         outputFiles,
         tool,
+        target,
         arguments: args
     };
 };

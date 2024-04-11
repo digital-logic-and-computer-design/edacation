@@ -110,3 +110,10 @@ export type TargetOptionTypes = {
     yosys: YosysOptions;
     nextpnr: NextpnrOptions;
 };
+
+export interface WorkerOptions {
+    inputFiles: string[];
+    outputFiles: string[];
+    tool: string;
+    target: TargetConfiguration;
+}
