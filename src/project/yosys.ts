@@ -115,9 +115,13 @@ export const generateYosysSynthPrepareCommands = (workerOptions: YosysWorkerOpti
 };
 
 export const generateYosysSynthCommands = (workerOptions: YosysWorkerOptions): string[] => {
+    const target = workerOptions.target;
+    const vendor = VENDORS[target.vendor];
+    const family = vendor.families[target.family];
+
     return [
         `read_json ${getTargetFile(workerOptions.target, 'presynth.yosys.json')}`,
-        `synth_ecp5 -json ${workerOptions.outputFiles[0]};`,
+        `synth_${family.architecture} -json ${workerOptions.outputFiles[0]};`,
         ''
     ];
 };
