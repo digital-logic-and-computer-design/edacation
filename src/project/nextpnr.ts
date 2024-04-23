@@ -49,6 +49,11 @@ export const generateNextpnrWorkerOptions = (
         case 'ice40': {
             args.push(`--${device.device}`);
             args.push('--package', target.package);
+
+            // Write ASC file by default
+            const file = getTargetFile(target, `${family.architecture}.asc`);
+            outputFiles.push(file);
+            args.push('--asc', `${family.architecture}.asc`);
             break;
         }
         case 'nexus': {
