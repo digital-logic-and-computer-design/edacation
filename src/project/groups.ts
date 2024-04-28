@@ -7,22 +7,119 @@ export interface ElementGroup {
 
 const elementGroups: ElementGroup[] = [
     {
-        name: 'Arithmetic Elements',
+        name: 'Multipliers and Divisions',
         sorting: 0,
-        color: 'blue',
-        elements: ['alu', 'add', 'sub', 'mul', 'div', 'divfloor', 'mod', 'modfloor', 'pow']
+        color: '#008000',
+        elements: ['mul', 'div', 'divfloor', 'macc', 'alu', 'pow']
     },
     {
         name: 'Comparators',
         sorting: 1,
-        color: 'yellow',
-        elements: ['eq', 'ne', 'ge', 'gt']
+        color: '#33cccc',
+        elements: ['eq', 'ne', 'ge', 'gt', 'eqx', 'nex', 'lt', 'le', 'bweqx']
     },
     {
         name: 'Memory Elements',
         sorting: 2,
-        color: 'green',
-        elements: ['adff']
+        color: '#ffcc00',
+        elements: [
+            'dff',
+            'dffe',
+            'dffsr',
+            'dffsre',
+            'adff',
+            'aldff',
+            'sdff',
+            'adffe',
+            'aldffe',
+            'sdffe',
+            'sdffce',
+            'fsm',
+            'memrd',
+            'memrd_v2',
+            'memwr',
+            'memwr_v2',
+            'mem',
+            'mem_v2'
+        ]
+    },
+    {
+        name: 'Latch Elements',
+        sorting: 3,
+        color: '#ff0000',
+        elements: ['sr', 'dlatchsr', 'dlatch', 'adlatch']
+    },
+    {
+        name: 'Bit Operators',
+        sorting: 4,
+        color: '#99cc00',
+        elements: [
+            'not',
+            'pos',
+            'neg',
+            'and',
+            'or',
+            'xor',
+            'xnor',
+            'reduce_and',
+            'reduce_or',
+            'reduce_xor',
+            'reduce_xnor',
+            'reduce_bool',
+            'logic_not',
+            'logic_and',
+            'logic_or'
+        ]
+    },
+    {
+        name: 'Multiplexers',
+        sorting: 5,
+        color: '#3366ff',
+        elements: ['mux', 'bmux', 'pmux', 'demux', 'bwmux']
+    },
+    {
+        name: 'Shifts',
+        sorting: 6,
+        color: '#ff9900',
+        elements: ['shl', 'shr', 'sshl', 'sshr', 'shift', 'shiftx']
+    },
+    {
+        name: 'Adders',
+        sorting: 7,
+        color: '#339966',
+        elements: ['add', 'sub']
+    },
+    {
+        name: 'Formal verification cells',
+        sorting: 8,
+        color: '#800080',
+        elements: [
+            'check',
+            'assert',
+            'assume',
+            'live',
+            'fair',
+            'cover',
+            'equiv',
+            'initstate',
+            'anyconst',
+            'anyseq',
+            'anyinit',
+            'allconst',
+            'allseq'
+        ]
+    },
+    {
+        name: 'Debugging cells',
+        sorting: 9,
+        color: '#999999',
+        elements: ['print']
+    },
+    {
+        name: 'Modulo',
+        sorting: 10,
+        color: '#00ff00',
+        elements: ['modfloor', 'mod']
     }
 ];
 
