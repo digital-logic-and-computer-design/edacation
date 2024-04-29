@@ -29,7 +29,10 @@ export const generateYosysWorkerOptions = (
     const inputFiles = projectInputFiles.filter((inputFile) =>
         FILE_EXTENSIONS_HDL.includes(path.extname(inputFile).substring(1))
     );
-    const outputFiles = [getTargetFile(target, `${family.architecture}.json`)];
+    const outputFiles = [
+        getTargetFile(target, `${family.architecture}.json`),
+        getTargetFile(target, 'luts.yosys.json')
+    ];
 
     const tool = 'yosys';
     const commands = [...inputFiles.map((file) => `read_verilog -sv ${file}`), 'proc;'];
@@ -122,6 +125,11 @@ export const generateYosysSynthCommands = (workerOptions: YosysWorkerOptions): s
     return [
         `read_json ${getTargetFile(workerOptions.target, 'presynth.yosys.json')}`,
         `synth_${family.architecture} -json ${workerOptions.outputFiles[0]};`,
+        '',
+        'design -reset',
+        '',
+        `read_json ${getTargetFile(workerOptions.target, 'presynth.yosys.json')};`,
+        `synth -lut 4 -json ${workerOptions.outputFiles[1]};`,
         ''
     ];
 };
