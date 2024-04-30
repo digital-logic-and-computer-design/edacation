@@ -129,7 +129,8 @@ export const generateYosysSynthCommands = (workerOptions: YosysWorkerOptions): s
         'design -reset',
         '',
         `read_json ${getTargetFile(workerOptions.target, 'presynth.yosys.json')};`,
-        `synth -lut 4 -json ${workerOptions.outputFiles[1]};`,
+        'synth -lut 4;',
+        `write_json ${workerOptions.outputFiles[1]};`,
         ''
     ];
 };
