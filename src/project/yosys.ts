@@ -60,14 +60,20 @@ export const generateYosysWorkerOptions = (
 export const getYosysWorkerOptions = (project: Project, targetId: string): YosysWorkerOptions => {
     const generated = generateYosysWorkerOptions(project.getConfiguration(), project.getInputFiles(), targetId);
 
-    const inputFiles = getCombined(project.getConfiguration(), targetId, 'yosys', 'inputFiles', generated.inputFiles);
+    const inputFiles = getCombined(
+        project.getConfiguration(),
+        targetId,
+        'yosys',
+        'inputFiles',
+        generated.inputFiles
+    ).filter((f) => !!f);
     const outputFiles = getCombined(
         project.getConfiguration(),
         targetId,
         'yosys',
         'outputFiles',
         generated.outputFiles
-    );
+    ).filter((f) => !!f);
 
     const tool = generated.tool;
     const target = generated.target;
