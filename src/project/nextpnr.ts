@@ -110,14 +110,20 @@ export const parseNextpnrArguments = (args: string[]) => args.flatMap((arg) => p
 export const getNextpnrWorkerOptions = (project: Project, targetId: string): NextpnrWorkerOptions => {
     const generated = generateNextpnrWorkerOptions(project.getConfiguration(), targetId);
 
-    const inputFiles = getCombined(project.getConfiguration(), targetId, 'nextpnr', 'inputFiles', generated.inputFiles);
+    const inputFiles = getCombined(
+        project.getConfiguration(),
+        targetId,
+        'nextpnr',
+        'inputFiles',
+        generated.inputFiles
+    ).filter((f) => !!f);
     const outputFiles = getCombined(
         project.getConfiguration(),
         targetId,
         'nextpnr',
         'outputFiles',
         generated.outputFiles
-    );
+    ).filter((f) => !!f);
 
     const tool = generated.tool;
     const target = generated.target;
