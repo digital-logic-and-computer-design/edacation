@@ -4,7 +4,7 @@ import {DEFAULT_CONFIGURATION, type ProjectConfiguration, schemaProjectConfigura
 
 type ProjectTarget = ProjectConfiguration['targets'][number];
 
-interface ProjectOutputFileState {
+export interface ProjectOutputFileState {
     path: string;
     targetId: string | null;
     stale: boolean;
